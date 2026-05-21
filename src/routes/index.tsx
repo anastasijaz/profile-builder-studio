@@ -159,13 +159,13 @@ function ProfileCrush() {
       <nav className="fixed inset-x-0 bottom-0 z-10 border-t border-[#EFE6D9] bg-white/90 backdrop-blur">
         <ul className="mx-auto flex max-w-[420px] items-center justify-around px-4 py-3">
           {[
-            { Icon: User, label: "Profile" },
-            { Icon: Users, label: "People" },
-            { Icon: Heart, label: "Liked you", active: true },
-            { Icon: MessageCircle, label: "Chats" },
-          ].map(({ Icon, label, active }) => (
+            { Icon: User, label: "Profile", to: "/" as const, active: true },
+            { Icon: Users, label: "Activities", to: "/activities" as const },
+            { Icon: Heart, label: "Liked you", to: "/" as const },
+            { Icon: MessageCircle, label: "Chats", to: "/" as const },
+          ].map(({ Icon, label, to, active }) => (
             <li key={label}>
-              <button className="flex flex-col items-center gap-1">
+              <Link to={to} className="flex flex-col items-center gap-1">
                 <Icon
                   className={`h-5 w-5 ${active ? "text-[#22172A]" : "text-muted-foreground"}`}
                   strokeWidth={1.5}
@@ -175,7 +175,7 @@ function ProfileCrush() {
                 >
                   {label}
                 </span>
-              </button>
+              </Link>
             </li>
           ))}
         </ul>
