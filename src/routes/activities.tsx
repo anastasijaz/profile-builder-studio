@@ -94,19 +94,25 @@ function ActivitiesPage() {
   const [tab, setTab] = useState<"all" | "signed">("all");
   const [signedUp, setSignedUp] = useState<Record<string, boolean>>({});
   const [sportFilter, setSportFilter] = useState<string | null>(null);
+  const userActivities = useUserActivities();
+
+  const all = useMemo(
+    () => [...userActivities, ...ACTIVITIES],
+    [userActivities],
+  );
 
   const sports = useMemo(
-    () => Array.from(new Set(ACTIVITIES.map((a) => a.sport))),
-    [],
+    () => Array.from(new Set(all.map((a) => a.sport))),
+    [all],
   );
 
   const list = useMemo(() => {
-    return ACTIVITIES.filter((a) => {
+    return all.filter((a) => {
       if (tab === "signed" && !signedUp[a.id]) return false;
       if (sportFilter && a.sport !== sportFilter) return false;
       return true;
     });
-  }, [tab, signedUp, sportFilter]);
+  }, [all, tab, signedUp, sportFilter]);
 
   return (
     <PhoneShell>
