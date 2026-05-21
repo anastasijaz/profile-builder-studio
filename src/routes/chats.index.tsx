@@ -3,7 +3,7 @@ import { PhoneShell, PageHeader } from "@/components/PhoneShell";
 import { MATCHES } from "@/data/chats";
 import { PEOPLE } from "@/data/people";
 
-export const Route = createFileRoute("/chats")({
+export const Route = createFileRoute("/chats/")({
   component: ChatsPage,
   head: () => ({
     meta: [
