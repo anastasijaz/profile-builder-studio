@@ -156,8 +156,14 @@
     border-color: var(--color-border);
   }
 
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+  html, body {
+    background-color: var(--color-page);
+    color: var(--color-ink);
+    font-family: var(--font-montserrat);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
   }
 }
