@@ -214,7 +214,10 @@ function ProfileFeed({ person, onMatch }: { person: Person; onMatch: () => void 
           <X className="h-6 w-6" strokeWidth={2} />
         </button>
         <button
-          onClick={() => setLiked((s) => ({ ...s, hero: true }))}
+          onClick={() => {
+            setLiked((s) => ({ ...s, hero: true }));
+            onMatch();
+          }}
           aria-label="Super melt"
           className="flex h-16 w-16 items-center justify-center rounded-full bg-melt-orange text-surface shadow-[0_10px_24px_-6px_rgba(255,143,31,0.65)] active:scale-90"
         >
