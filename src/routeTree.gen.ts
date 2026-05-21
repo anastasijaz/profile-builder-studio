@@ -17,6 +17,7 @@ import { Route as ActivitiesRouteImport } from './routes/activities'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChatsIndexRouteImport } from './routes/chats.index'
 import { Route as ChatsMatchIdRouteImport } from './routes/chats.$matchId'
+import { Route as ActivitiesNewRouteImport } from './routes/activities.new'
 
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
@@ -58,34 +59,42 @@ const ChatsMatchIdRoute = ChatsMatchIdRouteImport.update({
   path: '/$matchId',
   getParentRoute: () => ChatsRoute,
 } as any)
+const ActivitiesNewRoute = ActivitiesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => ActivitiesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/activities': typeof ActivitiesRoute
+  '/activities': typeof ActivitiesRouteWithChildren
   '/chats': typeof ChatsRouteWithChildren
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
   '/profile': typeof ProfileRoute
+  '/activities/new': typeof ActivitiesNewRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
   '/chats/': typeof ChatsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/activities': typeof ActivitiesRoute
+  '/activities': typeof ActivitiesRouteWithChildren
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
   '/profile': typeof ProfileRoute
+  '/activities/new': typeof ActivitiesNewRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
   '/chats': typeof ChatsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/activities': typeof ActivitiesRoute
+  '/activities': typeof ActivitiesRouteWithChildren
   '/chats': typeof ChatsRouteWithChildren
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
   '/profile': typeof ProfileRoute
+  '/activities/new': typeof ActivitiesNewRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
   '/chats/': typeof ChatsIndexRoute
 }
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/discover'
     | '/likes'
     | '/profile'
+    | '/activities/new'
     | '/chats/$matchId'
     | '/chats/'
   fileRoutesByTo: FileRoutesByTo
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/discover'
     | '/likes'
     | '/profile'
+    | '/activities/new'
     | '/chats/$matchId'
     | '/chats'
   id:
@@ -117,13 +128,14 @@ export interface FileRouteTypes {
     | '/discover'
     | '/likes'
     | '/profile'
+    | '/activities/new'
     | '/chats/$matchId'
     | '/chats/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ActivitiesRoute: typeof ActivitiesRoute
+  ActivitiesRoute: typeof ActivitiesRouteWithChildren
   ChatsRoute: typeof ChatsRouteWithChildren
   DiscoverRoute: typeof DiscoverRoute
   LikesRoute: typeof LikesRoute
@@ -188,8 +200,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatsMatchIdRouteImport
       parentRoute: typeof ChatsRoute
     }
+    '/activities/new': {
+      id: '/activities/new'
+      path: '/new'
+      fullPath: '/activities/new'
+      preLoaderRoute: typeof ActivitiesNewRouteImport
+      parentRoute: typeof ActivitiesRoute
+    }
   }
 }
+
+interface ActivitiesRouteChildren {
+  ActivitiesNewRoute: typeof ActivitiesNewRoute
+}
+
+const ActivitiesRouteChildren: ActivitiesRouteChildren = {
+  ActivitiesNewRoute: ActivitiesNewRoute,
+}
+
+const ActivitiesRouteWithChildren = ActivitiesRoute._addFileChildren(
+  ActivitiesRouteChildren,
+)
 
 interface ChatsRouteChildren {
   ChatsMatchIdRoute: typeof ChatsMatchIdRoute
@@ -205,7 +236,7 @@ const ChatsRouteWithChildren = ChatsRoute._addFileChildren(ChatsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ActivitiesRoute: ActivitiesRoute,
+  ActivitiesRoute: ActivitiesRouteWithChildren,
   ChatsRoute: ChatsRouteWithChildren,
   DiscoverRoute: DiscoverRoute,
   LikesRoute: LikesRoute,
