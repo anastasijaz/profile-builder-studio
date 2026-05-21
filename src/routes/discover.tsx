@@ -100,7 +100,7 @@ function PromptCard({
   );
 }
 
-function ProfileFeed({ person }: { person: Person }) {
+function ProfileFeed({ person, onMatch }: { person: Person; onMatch: () => void }) {
   const [liked, setLiked] = useState<Record<number, boolean>>({});
   const [passed, setPassed] = useState(false);
 
