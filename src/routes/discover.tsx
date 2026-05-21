@@ -230,7 +230,12 @@ function ProfileFeed({ person, onMatch }: { person: Person; onMatch: () => void 
 
 function DiscoverPage() {
   const [idx, setIdx] = useState(0);
+  const [matched, setMatched] = useState(false);
   const person = useMemo(() => PEOPLE[idx % PEOPLE.length], [idx]);
+  const youPhoto = useMemo(
+    () => PEOPLE[(idx + 1) % PEOPLE.length].photos[0],
+    [idx],
+  );
 
   return (
     <PhoneShell>
@@ -258,8 +263,22 @@ function DiscoverPage() {
       </div>
 
       <section className="px-5">
-        <ProfileFeed key={person.id} person={person} />
+        <ProfileFeed
+          key={person.id}
+          person={person}
+          onMatch={() => setMatched(true)}
+        />
       </section>
+
+      {matched && (
+        <MatchMeltOverlay
+          youPhoto={youPhoto}
+          themPhoto={person.photos[0]}
+          themName={person.name}
+          matchId={String(person.id)}
+          onClose={() => setMatched(false)}
+        />
+      )}
     </PhoneShell>
   );
 }
