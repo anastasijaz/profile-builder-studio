@@ -68,7 +68,7 @@ function ChatThread() {
   };
 
   const allMessages: LocalMsg[] = [
-    ...match.messages.map((m) => ({ id: m.id, from: m.from, text: m.text })),
+    ...match.messages.map((m): LocalMsg => ({ id: m.id, from: m.from, text: m.text })),
     ...extra,
   ];
 
