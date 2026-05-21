@@ -40,7 +40,9 @@ export const Route = createFileRoute("/chats/$matchId")({
 type LocalMsg = { id: string; from: "me" | "them"; text: string; activity?: string };
 
 function ChatThread() {
-  const { match, person } = Route.useLoaderData();
+  const data = Route.useLoaderData() as ReturnType<typeof getMatch>;
+  if (!data) return null;
+  const { match, person } = data;
   const [draft, setDraft] = useState("");
   const [extra, setExtra] = useState<LocalMsg[]>([]);
   const [showActivities, setShowActivities] = useState(false);
