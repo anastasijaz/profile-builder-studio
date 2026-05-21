@@ -6,7 +6,7 @@ import { addUserActivity } from "@/data/user-activities";
 import { ACTIVITIES } from "@/data/activities";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/activities/new")({
+export const Route = createFileRoute("/activities_/new")({
   component: NewActivityPage,
   head: () => ({
     meta: [

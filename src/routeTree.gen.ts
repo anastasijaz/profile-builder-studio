@@ -17,7 +17,7 @@ import { Route as ActivitiesRouteImport } from './routes/activities'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChatsIndexRouteImport } from './routes/chats.index'
 import { Route as ChatsMatchIdRouteImport } from './routes/chats.$matchId'
-import { Route as ActivitiesNewRouteImport } from './routes/activities.new'
+import { Route as ActivitiesNewRouteImport } from './routes/activities_.new'
 
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
@@ -60,14 +60,14 @@ const ChatsMatchIdRoute = ChatsMatchIdRouteImport.update({
   getParentRoute: () => ChatsRoute,
 } as any)
 const ActivitiesNewRoute = ActivitiesNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => ActivitiesRoute,
+  id: '/activities_/new',
+  path: '/activities/new',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/activities': typeof ActivitiesRouteWithChildren
+  '/activities': typeof ActivitiesRoute
   '/chats': typeof ChatsRouteWithChildren
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
@@ -78,7 +78,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/activities': typeof ActivitiesRouteWithChildren
+  '/activities': typeof ActivitiesRoute
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
   '/profile': typeof ProfileRoute
@@ -89,12 +89,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/activities': typeof ActivitiesRouteWithChildren
+  '/activities': typeof ActivitiesRoute
   '/chats': typeof ChatsRouteWithChildren
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
   '/profile': typeof ProfileRoute
-  '/activities/new': typeof ActivitiesNewRoute
+  '/activities_/new': typeof ActivitiesNewRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
   '/chats/': typeof ChatsIndexRoute
 }
@@ -128,18 +128,19 @@ export interface FileRouteTypes {
     | '/discover'
     | '/likes'
     | '/profile'
-    | '/activities/new'
+    | '/activities_/new'
     | '/chats/$matchId'
     | '/chats/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ActivitiesRoute: typeof ActivitiesRouteWithChildren
+  ActivitiesRoute: typeof ActivitiesRoute
   ChatsRoute: typeof ChatsRouteWithChildren
   DiscoverRoute: typeof DiscoverRoute
   LikesRoute: typeof LikesRoute
   ProfileRoute: typeof ProfileRoute
+  ActivitiesNewRoute: typeof ActivitiesNewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -200,27 +201,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatsMatchIdRouteImport
       parentRoute: typeof ChatsRoute
     }
-    '/activities/new': {
-      id: '/activities/new'
-      path: '/new'
+    '/activities_/new': {
+      id: '/activities_/new'
+      path: '/activities/new'
       fullPath: '/activities/new'
       preLoaderRoute: typeof ActivitiesNewRouteImport
-      parentRoute: typeof ActivitiesRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface ActivitiesRouteChildren {
-  ActivitiesNewRoute: typeof ActivitiesNewRoute
-}
-
-const ActivitiesRouteChildren: ActivitiesRouteChildren = {
-  ActivitiesNewRoute: ActivitiesNewRoute,
-}
-
-const ActivitiesRouteWithChildren = ActivitiesRoute._addFileChildren(
-  ActivitiesRouteChildren,
-)
 
 interface ChatsRouteChildren {
   ChatsMatchIdRoute: typeof ChatsMatchIdRoute
@@ -236,12 +225,23 @@ const ChatsRouteWithChildren = ChatsRoute._addFileChildren(ChatsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ActivitiesRoute: ActivitiesRouteWithChildren,
+  ActivitiesRoute: ActivitiesRoute,
   ChatsRoute: ChatsRouteWithChildren,
   DiscoverRoute: DiscoverRoute,
   LikesRoute: LikesRoute,
   ProfileRoute: ProfileRoute,
+  ActivitiesNewRoute: ActivitiesNewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
