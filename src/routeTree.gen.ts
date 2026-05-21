@@ -17,6 +17,7 @@ import { Route as ActivitiesRouteImport } from './routes/activities'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChatsIndexRouteImport } from './routes/chats.index'
 import { Route as ChatsMatchIdRouteImport } from './routes/chats.$matchId'
+import { Route as ActivitiesNewRouteImport } from './routes/activities_.new'
 
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
@@ -58,6 +59,11 @@ const ChatsMatchIdRoute = ChatsMatchIdRouteImport.update({
   path: '/$matchId',
   getParentRoute: () => ChatsRoute,
 } as any)
+const ActivitiesNewRoute = ActivitiesNewRouteImport.update({
+  id: '/activities_/new',
+  path: '/activities/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
   '/profile': typeof ProfileRoute
+  '/activities/new': typeof ActivitiesNewRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
   '/chats/': typeof ChatsIndexRoute
 }
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
   '/profile': typeof ProfileRoute
+  '/activities/new': typeof ActivitiesNewRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
   '/chats': typeof ChatsIndexRoute
 }
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
   '/profile': typeof ProfileRoute
+  '/activities_/new': typeof ActivitiesNewRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
   '/chats/': typeof ChatsIndexRoute
 }
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/discover'
     | '/likes'
     | '/profile'
+    | '/activities/new'
     | '/chats/$matchId'
     | '/chats/'
   fileRoutesByTo: FileRoutesByTo
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/discover'
     | '/likes'
     | '/profile'
+    | '/activities/new'
     | '/chats/$matchId'
     | '/chats'
   id:
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/discover'
     | '/likes'
     | '/profile'
+    | '/activities_/new'
     | '/chats/$matchId'
     | '/chats/'
   fileRoutesById: FileRoutesById
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   DiscoverRoute: typeof DiscoverRoute
   LikesRoute: typeof LikesRoute
   ProfileRoute: typeof ProfileRoute
+  ActivitiesNewRoute: typeof ActivitiesNewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -188,6 +201,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatsMatchIdRouteImport
       parentRoute: typeof ChatsRoute
     }
+    '/activities_/new': {
+      id: '/activities_/new'
+      path: '/activities/new'
+      fullPath: '/activities/new'
+      preLoaderRoute: typeof ActivitiesNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -210,6 +230,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiscoverRoute: DiscoverRoute,
   LikesRoute: LikesRoute,
   ProfileRoute: ProfileRoute,
+  ActivitiesNewRoute: ActivitiesNewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { MapPin, SlidersHorizontal, Check } from "lucide-react";
+import { MapPin, SlidersHorizontal, Check, Plus } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -11,6 +11,7 @@ import {
 import { PhoneShell, PageHeader } from "@/components/PhoneShell";
 import { TopToggle } from "@/components/TopToggle";
 import { ACTIVITIES, type Activity } from "@/data/activities";
+import { useUserActivities } from "@/data/user-activities";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/activities")({
@@ -93,19 +94,25 @@ function ActivitiesPage() {
   const [tab, setTab] = useState<"all" | "signed">("all");
   const [signedUp, setSignedUp] = useState<Record<string, boolean>>({});
   const [sportFilter, setSportFilter] = useState<string | null>(null);
+  const userActivities = useUserActivities();
+
+  const all = useMemo(
+    () => [...userActivities, ...ACTIVITIES],
+    [userActivities],
+  );
 
   const sports = useMemo(
-    () => Array.from(new Set(ACTIVITIES.map((a) => a.sport))),
-    [],
+    () => Array.from(new Set(all.map((a) => a.sport))),
+    [all],
   );
 
   const list = useMemo(() => {
-    return ACTIVITIES.filter((a) => {
+    return all.filter((a) => {
       if (tab === "signed" && !signedUp[a.id]) return false;
       if (sportFilter && a.sport !== sportFilter) return false;
       return true;
     });
-  }, [tab, signedUp, sportFilter]);
+  }, [all, tab, signedUp, sportFilter]);
 
   return (
     <PhoneShell>
@@ -204,6 +211,15 @@ function ActivitiesPage() {
           ))
         )}
       </section>
+
+      <Link
+        to="/activities/new"
+        aria-label="Host an activity"
+        className="fixed bottom-24 right-5 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-melt-orange text-surface shadow-card active:scale-95 sm:absolute"
+        style={{ marginBottom: "env(safe-area-inset-bottom)" }}
+      >
+        <Plus className="h-6 w-6" strokeWidth={2.5} />
+      </Link>
     </PhoneShell>
   );
 }
