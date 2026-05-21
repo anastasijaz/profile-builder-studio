@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { PhoneShell, PageHeader } from "@/components/PhoneShell";
 import { TopToggle } from "@/components/TopToggle";
+import { MatchMeltOverlay } from "@/components/MatchMeltOverlay";
 import { PEOPLE, type Person, type Prompt } from "@/data/people";
 import { cn } from "@/lib/utils";
 
@@ -99,7 +100,7 @@ function PromptCard({
   );
 }
 
-function ProfileFeed({ person }: { person: Person }) {
+function ProfileFeed({ person, onMatch }: { person: Person; onMatch: () => void }) {
   const [liked, setLiked] = useState<Record<number, boolean>>({});
   const [passed, setPassed] = useState(false);
 
@@ -213,7 +214,10 @@ function ProfileFeed({ person }: { person: Person }) {
           <X className="h-6 w-6" strokeWidth={2} />
         </button>
         <button
-          onClick={() => setLiked((s) => ({ ...s, hero: true }))}
+          onClick={() => {
+            setLiked((s) => ({ ...s, hero: true }));
+            onMatch();
+          }}
           aria-label="Super melt"
           className="flex h-16 w-16 items-center justify-center rounded-full bg-melt-orange text-surface shadow-[0_10px_24px_-6px_rgba(255,143,31,0.65)] active:scale-90"
         >
@@ -226,7 +230,12 @@ function ProfileFeed({ person }: { person: Person }) {
 
 function DiscoverPage() {
   const [idx, setIdx] = useState(0);
+  const [matched, setMatched] = useState(false);
   const person = useMemo(() => PEOPLE[idx % PEOPLE.length], [idx]);
+  const youPhoto = useMemo(
+    () => PEOPLE[(idx + 1) % PEOPLE.length].photos[0],
+    [idx],
+  );
 
   return (
     <PhoneShell>
@@ -254,8 +263,22 @@ function DiscoverPage() {
       </div>
 
       <section className="px-5">
-        <ProfileFeed key={person.id} person={person} />
+        <ProfileFeed
+          key={person.id}
+          person={person}
+          onMatch={() => setMatched(true)}
+        />
       </section>
+
+      {matched && (
+        <MatchMeltOverlay
+          youPhoto={youPhoto}
+          themPhoto={person.photos[0]}
+          themName={person.name}
+          matchId={String(person.id)}
+          onClose={() => setMatched(false)}
+        />
+      )}
     </PhoneShell>
   );
 }
