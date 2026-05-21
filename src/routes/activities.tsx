@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { MapPin, SlidersHorizontal, Check } from "lucide-react";
+import { MapPin, SlidersHorizontal, Check, Plus } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -11,6 +11,7 @@ import {
 import { PhoneShell, PageHeader } from "@/components/PhoneShell";
 import { TopToggle } from "@/components/TopToggle";
 import { ACTIVITIES, type Activity } from "@/data/activities";
+import { useUserActivities } from "@/data/user-activities";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/activities")({
