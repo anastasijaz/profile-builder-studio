@@ -6,6 +6,12 @@
 @theme inline {
   --font-montserrat: "Montserrat", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --color-page: var(--page);
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
+  --color-melt-orange: var(--melt-orange);
+  --color-melt-peach: var(--melt-peach);
+  --color-melt-mint: var(--melt-mint);
 }
 
 @custom-variant dark (&:is(.dark *));
