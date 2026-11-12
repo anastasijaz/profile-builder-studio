@@ -9,6 +9,10 @@ export const Route = createFileRoute("/chats/")({
     meta: [
       { title: "Chats — Melt" },
       { name: "description", content: "Your conversations on Melt." },
+      { property: "og:title", content: "Chats — Melt" },
+      { property: "og:description", content: "Your conversations on Melt." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
 });

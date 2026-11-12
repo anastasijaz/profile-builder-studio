@@ -22,6 +22,8 @@ export const Route = createFileRoute("/activities")({
       { name: "description", content: "Book sport activities near you and meet your match in motion." },
       { property: "og:title", content: "Activities — Melt" },
       { property: "og:description", content: "Run, lift, climb, melt." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
 });

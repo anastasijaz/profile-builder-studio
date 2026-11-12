@@ -9,6 +9,10 @@ export const Route = createFileRoute("/likes")({
     meta: [
       { title: "Likes — Melt" },
       { name: "description", content: "People who melted for you." },
+      { property: "og:title", content: "Likes — Melt" },
+      { property: "og:description", content: "People who melted for you." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
 });
