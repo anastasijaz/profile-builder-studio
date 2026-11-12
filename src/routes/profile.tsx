@@ -17,6 +17,10 @@ export const Route = createFileRoute("/profile")({
     meta: [
       { title: "Your profile — Melt" },
       { name: "description", content: "Manage your Melt profile and prompts." },
+      { property: "og:title", content: "Your profile — Melt" },
+      { property: "og:description", content: "Manage your Melt profile and prompts." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
 });

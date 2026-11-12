@@ -26,6 +26,8 @@ export const Route = createFileRoute("/discover")({
       { name: "description", content: "Meet sport enthusiasts near you on Melt." },
       { property: "og:title", content: "Discover — Melt" },
       { property: "og:description", content: "Sweat together, then maybe melt together." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
 });

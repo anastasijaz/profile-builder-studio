@@ -14,6 +14,8 @@ export const Route = createFileRoute("/activities_/new")({
       { name: "description", content: "Post your own sport meetup and find people to melt with." },
       { property: "og:title", content: "Host an activity — Melt" },
       { property: "og:description", content: "Post your own sport meetup on Melt." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
 });

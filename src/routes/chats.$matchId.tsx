@@ -16,6 +16,10 @@ export const Route = createFileRoute("/chats/$matchId")({
     meta: [
       { title: loaderData ? `${loaderData.person.name} — Melt` : "Chat — Melt" },
       { name: "description", content: "Keep your conversation going on Melt." },
+      { property: "og:title", content: loaderData ? `${loaderData.person.name} — Melt` : "Chat — Melt" },
+      { property: "og:description", content: "Keep your conversation going on Melt." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   notFoundComponent: () => (
