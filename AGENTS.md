@@ -1,0 +1,1 @@
+Load remote font stylesheets through the root route's head links, never CSS imports, because Lightning CSS resolves imports as local files.
