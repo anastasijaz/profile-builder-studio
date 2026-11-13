@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { PhoneShell, PageHeader } from "@/components/PhoneShell";
 import { TopToggle } from "@/components/TopToggle";
+import { SafetyMenu } from "@/components/SafetyMenu";
 import { MatchMeltOverlay } from "@/components/MatchMeltOverlay";
 import { EmptyCard, ProfileFeed } from "@/components/ProfileFeed";
 import { useDiscover, useSwipe } from "@/lib/api/discover";
@@ -92,6 +93,13 @@ function DiscoverPage() {
             busy={swipe.isPending}
             onPass={() => act("pass")}
             onLike={() => act("like")}
+            topRight={
+              <SafetyMenu
+                targetId={person.id}
+                targetName={person.name}
+                onBlocked={() => setSwiped((s) => new Set(s).add(person.id))}
+              />
+            }
           />
         )}
       </section>

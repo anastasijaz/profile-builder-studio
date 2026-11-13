@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, Send, CalendarDays } from "lucide-react";
 import { toast } from "sonner";
@@ -8,6 +8,7 @@ import { useSignedUrls } from "@/lib/api/photos";
 import { errorMessage } from "@/lib/api/profiles";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { ReportDialog, SafetyMenu } from "@/components/SafetyMenu";
 
 export const Route = createFileRoute("/chats/$matchId")({
   component: ChatThread,
@@ -21,6 +22,26 @@ export const Route = createFileRoute("/chats/$matchId")({
 
 const MAX_LEN = 2000;
 
+/** Press-and-hold (touch) or right-click (desktop) handler props. */
+function longPress(onTrigger: () => void, ms = 550) {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const clear = () => timer && clearTimeout(timer);
+  return {
+    onPointerDown: () => {
+      clear();
+      timer = setTimeout(onTrigger, ms);
+    },
+    onPointerUp: clear,
+    onPointerLeave: clear,
+    onPointerCancel: clear,
+    onContextMenu: (e: React.MouseEvent) => {
+      e.preventDefault();
+      clear();
+      onTrigger();
+    },
+  };
+}
+
 function ChatThread() {
   const { matchId } = Route.useParams();
   const { user } = useAuth();
@@ -30,6 +51,8 @@ function ChatThread() {
   const [draft, setDraft] = useState("");
   const [showActivities, setShowActivities] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const [reporting, setReporting] = useState<{ id: string; body: string } | null>(null);
 
   const other = match.data;
   const photoUrl = useSignedUrls([other?.photo_path]).data?.[other?.photo_path ?? ""];
@@ -98,6 +121,14 @@ function ChatThread() {
             <p className="truncate font-semibold leading-none">{other.display_name}</p>
           </Link>
         )}
+        {other && (
+          <SafetyMenu
+            targetId={other.other_id}
+            targetName={other.display_name}
+            onBlocked={() => navigate({ to: "/chats" })}
+            className="bg-page shadow-none"
+          />
+        )}
       </header>
 
       {/* Messages */}
@@ -114,6 +145,8 @@ function ChatThread() {
           return (
             <li key={m.id} className={cn("flex", mine ? "justify-end" : "justify-start")}>
               <div
+                {...(mine ? {} : longPress(() => setReporting({ id: m.id, body: m.body })))}
+                title={mine ? undefined : "Press and hold to report"}
                 className={cn(
                   "max-w-[80%] whitespace-pre-wrap break-words rounded-2xl px-4 py-2 text-sm shadow-sm",
                   mine
@@ -128,6 +161,18 @@ function ChatThread() {
         })}
         <div ref={bottomRef} />
       </ol>
+
+      {other && (
+        <ReportDialog
+          open={Boolean(reporting)}
+          onOpenChange={(v) => !v && setReporting(null)}
+          targetId={other.other_id}
+          targetName={other.display_name}
+          messageId={reporting?.id}
+          messagePreview={reporting?.body}
+          onBlocked={() => navigate({ to: "/chats" })}
+        />
+      )}
 
       {/* Activity suggester (activities are a preview, so this sends plain text) */}
       {showActivities && (

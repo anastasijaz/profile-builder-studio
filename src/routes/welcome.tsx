@@ -129,8 +129,8 @@ function WelcomePage() {
                 >
                   Privacy Policy
                 </a>{" "}
-                and agree to Melt processing my profile data, including my interests and approximate
-                location, to show me matches.
+                and explicitly consent to Melt processing my profile data to show me matches,
+                including data that may reveal my sex life or sexual orientation (Art. 9 GDPR).
               </CheckRow>
             </div>
 

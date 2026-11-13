@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ChevronRight, LogOut, Pencil, Settings } from "lucide-react";
+import { Pencil, Settings } from "lucide-react";
 import { PhoneShell, PageHeader } from "@/components/PhoneShell";
 import { Photo } from "@/components/ProfileFeed";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { signOut } from "@/lib/auth";
+import { SettingsSheet } from "@/components/SettingsSheet";
 import { ageFrom } from "@/lib/age";
 import { useInterests } from "@/lib/api/interests";
 import { useMyFullProfile } from "@/lib/api/profiles";
@@ -23,40 +22,6 @@ export const Route = createFileRoute("/profile")({
     ],
   }),
 });
-
-function SettingsRow({
-  icon,
-  children,
-  onClick,
-  to,
-  danger,
-}: {
-  icon: React.ReactNode;
-  children: React.ReactNode;
-  onClick?: () => void;
-  to?: string;
-  danger?: boolean;
-}) {
-  const cls = `flex min-h-12 w-full items-center gap-3 rounded-2xl px-3 text-left text-sm active:bg-ink/5 ${
-    danger ? "text-red-700" : "text-ink"
-  }`;
-  const inner = (
-    <>
-      <span className="flex h-8 w-8 items-center justify-center">{icon}</span>
-      <span className="flex-1">{children}</span>
-      <ChevronRight className="h-4 w-4 opacity-40" />
-    </>
-  );
-  return to ? (
-    <Link to={to} className={cls}>
-      {inner}
-    </Link>
-  ) : (
-    <button onClick={onClick} className={cls}>
-      {inner}
-    </button>
-  );
-}
 
 function ProfilePage() {
   const profile = useMyFullProfile();
@@ -158,21 +123,7 @@ function ProfilePage() {
         </>
       )}
 
-      <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
-        <SheetContent side="bottom" className="rounded-t-3xl bg-page">
-          <SheetHeader>
-            <SheetTitle className="font-serif text-2xl italic">Settings</SheetTitle>
-          </SheetHeader>
-          <div className="mt-2 space-y-1 pb-[env(safe-area-inset-bottom)]">
-            <SettingsRow icon={<Pencil className="h-4 w-4" />} to="/profile/edit">
-              Edit profile
-            </SettingsRow>
-            <SettingsRow icon={<LogOut className="h-4 w-4" />} onClick={() => signOut()}>
-              Sign out
-            </SettingsRow>
-          </div>
-        </SheetContent>
-      </Sheet>
+      <SettingsSheet open={settingsOpen} onOpenChange={setSettingsOpen} />
     </PhoneShell>
   );
 }

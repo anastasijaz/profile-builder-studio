@@ -252,8 +252,9 @@ function OnboardingPage() {
                     className="font-semibold text-melt-orange underline"
                   >
                     Privacy Policy
-                  </a>
-                  .
+                  </a>{" "}
+                  and explicitly consent to Melt processing my profile data to show me matches,
+                  including data that may reveal my sex life or sexual orientation (Art. 9 GDPR).
                 </CheckRow>
                 {errors.consent && (
                   <p className="mt-1 text-xs text-melt-orange">{errors.consent}</p>

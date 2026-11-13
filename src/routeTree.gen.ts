@@ -15,7 +15,9 @@ import { Route as ChatsRouteImport } from './routes/chats'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as LikesRouteImport } from './routes/likes'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as ActivitiesNewRouteImport } from './routes/activities_.new'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
@@ -54,9 +56,19 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WelcomeRoute = WelcomeRouteImport.update({
@@ -102,7 +114,9 @@ export interface FileRoutesByFullPath {
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
   '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/terms': typeof TermsRoute
   '/welcome': typeof WelcomeRoute
   '/activities/new': typeof ActivitiesNewRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -117,7 +131,9 @@ export interface FileRoutesByTo {
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
   '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/terms': typeof TermsRoute
   '/welcome': typeof WelcomeRoute
   '/activities/new': typeof ActivitiesNewRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -134,7 +150,9 @@ export interface FileRoutesById {
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
   '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/terms': typeof TermsRoute
   '/welcome': typeof WelcomeRoute
   '/activities_/new': typeof ActivitiesNewRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -152,7 +170,9 @@ export interface FileRouteTypes {
     | '/discover'
     | '/likes'
     | '/onboarding'
+    | '/privacy'
     | '/profile'
+    | '/terms'
     | '/welcome'
     | '/activities/new'
     | '/auth/callback'
@@ -167,7 +187,9 @@ export interface FileRouteTypes {
     | '/discover'
     | '/likes'
     | '/onboarding'
+    | '/privacy'
     | '/profile'
+    | '/terms'
     | '/welcome'
     | '/activities/new'
     | '/auth/callback'
@@ -183,7 +205,9 @@ export interface FileRouteTypes {
     | '/discover'
     | '/likes'
     | '/onboarding'
+    | '/privacy'
     | '/profile'
+    | '/terms'
     | '/welcome'
     | '/activities_/new'
     | '/auth/callback'
@@ -200,7 +224,9 @@ export interface RootRouteChildren {
   DiscoverRoute: typeof DiscoverRoute
   LikesRoute: typeof LikesRoute
   OnboardingRoute: typeof OnboardingRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
+  TermsRoute: typeof TermsRoute
   WelcomeRoute: typeof WelcomeRoute
   ActivitiesNewRoute: typeof ActivitiesNewRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
@@ -252,11 +278,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/welcome': {
@@ -330,7 +370,9 @@ const rootRouteChildren: RootRouteChildren = {
   DiscoverRoute: DiscoverRoute,
   LikesRoute: LikesRoute,
   OnboardingRoute: OnboardingRoute,
+  PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
+  TermsRoute: TermsRoute,
   WelcomeRoute: WelcomeRoute,
   ActivitiesNewRoute: ActivitiesNewRoute,
   AuthCallbackRoute: AuthCallbackRoute,

@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { toast } from "sonner";
+import { SafetyMenu } from "@/components/SafetyMenu";
 import { MatchMeltOverlay } from "@/components/MatchMeltOverlay";
 import { EmptyCard, ProfileFeed } from "@/components/ProfileFeed";
 import { useProfileCard, useSwipe } from "@/lib/api/discover";
@@ -68,6 +69,13 @@ function PersonPage() {
             busy={swipe.isPending}
             onPass={() => act("pass")}
             onLike={() => act("like")}
+            topRight={
+              <SafetyMenu
+                targetId={card.data.id}
+                targetName={card.data.name}
+                onBlocked={() => navigate({ to: "/likes" })}
+              />
+            }
           />
         )}
       </section>
