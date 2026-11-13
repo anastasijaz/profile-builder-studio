@@ -12,7 +12,7 @@ export const PROMPT_QUESTIONS = [
   "My simple pleasures…",
 ] as const;
 
-export const MAX_PROMPTS = 3;
+export const MAX_PROMPTS = 5;
 export const PROMPT_ANSWER_MAX = 150;
 
 export type PromptDraft = { question: string; answer: string };

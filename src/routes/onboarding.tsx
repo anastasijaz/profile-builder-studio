@@ -293,7 +293,7 @@ function OnboardingPage() {
         {step === 2 && (
           <>
             <p className="text-sm text-ink/60">
-              Pick up to 3 prompts and answer them. People can melt on a specific answer.
+              Pick up to 5 prompts and answer them. People can melt on a specific answer.
             </p>
             <PromptEditor value={prompts} onChange={setPrompts} />
             {errors.prompts && <p className="text-xs text-melt-orange">{errors.prompts}</p>}

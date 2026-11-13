@@ -14,21 +14,21 @@ create table public.profile_prompts (
     'My simple pleasures…'
   )),
   answer text not null check (char_length(btrim(answer)) between 1 and 150),
-  position smallint not null default 0 check (position between 0 and 2),
+  position smallint not null default 0 check (position between 0 and 4),
   created_at timestamptz not null default now(),
   unique (user_id, question)
 );
 create index profile_prompts_user_idx on public.profile_prompts (user_id, position);
 
--- Max 3 prompts per profile.
+-- Max 5 prompts per profile.
 create function public.profile_prompts_limit()
 returns trigger
 language plpgsql
 set search_path = ''
 as $$
 begin
-  if (select count(*) from public.profile_prompts where user_id = new.user_id) >= 3 then
-    raise exception 'You can answer up to 3 prompts.' using errcode = '23514';
+  if (select count(*) from public.profile_prompts where user_id = new.user_id) >= 5 then
+    raise exception 'You can answer up to 5 prompts.' using errcode = '23514';
   end if;
   return new;
 end;

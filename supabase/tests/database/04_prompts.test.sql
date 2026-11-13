@@ -23,14 +23,16 @@ select lives_ok(
   $$insert into public.profile_prompts (user_id, question, answer, position) values
     ('bbbbbbbb-0000-0000-0000-00000000000b', 'Currently training for…', 'Berlin Marathon. Sub-3 or bust.', 0),
     ('bbbbbbbb-0000-0000-0000-00000000000b', 'Post-workout ritual…', 'Cold shower, flat white.', 1),
-    ('bbbbbbbb-0000-0000-0000-00000000000b', 'Favourite snack bar…', 'Peanut butter anything.', 2)$$,
-  'a user can answer up to three prompts'
+    ('bbbbbbbb-0000-0000-0000-00000000000b', 'Favourite snack bar…', 'Peanut butter anything.', 2),
+    ('bbbbbbbb-0000-0000-0000-00000000000b', 'My current PR is…', '10k in 40:00', 3),
+    ('bbbbbbbb-0000-0000-0000-00000000000b', 'My sport origin story…', 'School cross-country.', 4)$$,
+  'a user can answer up to five prompts'
 );
 select throws_like(
   $$insert into public.profile_prompts (user_id, question, answer) values
-    ('bbbbbbbb-0000-0000-0000-00000000000b', 'My current PR is…', '10k in 40:00')$$,
-  '%up to 3%',
-  'a fourth prompt is rejected'
+    ('bbbbbbbb-0000-0000-0000-00000000000b', 'My simple pleasures…', 'Coffee.')$$,
+  '%up to 5%',
+  'a sixth prompt is rejected'
 );
 select throws_like(
   $$insert into public.profile_prompts (user_id, question, answer) values
@@ -50,7 +52,7 @@ select set_config('request.jwt.claims', '{"sub":"aaaaaaaa-0000-0000-0000-0000000
 set local role authenticated;
 select is(
   (select jsonb_array_length(prompts) from public.discover_candidates(10) where id = 'bbbbbbbb-0000-0000-0000-00000000000b'),
-  3,
+  5,
   'discovery cards include the person''s prompts'
 );
 select is(
@@ -75,7 +77,7 @@ select is(
 );
 select is(
   (select jsonb_array_length(public.export_my_data_v2() -> 'prompts')),
-  3,
+  5,
   'the data export includes your prompts'
 );
 reset role;

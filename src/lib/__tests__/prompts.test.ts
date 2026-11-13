@@ -1,15 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { diffPrompts, promptsSchema, PROMPT_QUESTIONS } from "../prompts";
+import { diffPrompts, MAX_PROMPTS, promptsSchema, PROMPT_QUESTIONS } from "../prompts";
+
+const answered = (n: number) =>
+  PROMPT_QUESTIONS.slice(0, n).map((question) => ({ question, answer: "Yes" }));
 
 describe("promptsSchema", () => {
-  it("accepts up to 3 answered prompts from the library", () => {
-    const ok = PROMPT_QUESTIONS.slice(0, 3).map((question) => ({ question, answer: "Yes" }));
-    expect(promptsSchema.safeParse(ok).success).toBe(true);
+  it(`accepts up to ${MAX_PROMPTS} answered prompts from the library`, () => {
+    expect(promptsSchema.safeParse(answered(MAX_PROMPTS)).success).toBe(true);
     expect(promptsSchema.safeParse([]).success).toBe(true);
   });
-  it("rejects a 4th prompt, duplicates, empty answers and made-up questions", () => {
-    const four = PROMPT_QUESTIONS.slice(0, 4).map((question) => ({ question, answer: "x" }));
-    expect(promptsSchema.safeParse(four).success).toBe(false);
+  it("rejects too many prompts, duplicates, empty answers and made-up questions", () => {
+    expect(promptsSchema.safeParse(answered(MAX_PROMPTS + 1)).success).toBe(false);
     const dup = [
       { question: PROMPT_QUESTIONS[0], answer: "a" },
       { question: PROMPT_QUESTIONS[0], answer: "b" },
