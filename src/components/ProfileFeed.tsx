@@ -23,12 +23,29 @@ export function Photo({
   alt,
   eager,
   className,
+  missing,
 }: {
   url?: string;
   alt: string;
   eager?: boolean;
   className?: string;
+  /** No photo exists (vs. still loading): show the first letter of `alt`. */
+  missing?: boolean;
 }) {
+  if (missing) {
+    return (
+      <div
+        role="img"
+        aria-label={alt}
+        className={cn(
+          "flex aspect-[3/4] w-full items-center justify-center bg-gradient-to-br from-melt-peach to-melt-orange/70",
+          className,
+        )}
+      >
+        <span className="font-serif text-8xl italic text-surface/90">{alt.charAt(0)}</span>
+      </div>
+    );
+  }
   return url ? (
     <img
       src={url}
@@ -72,7 +89,7 @@ export function ProfileFeed({
   return (
     <div className="space-y-4">
       <div className="relative overflow-hidden rounded-3xl bg-surface shadow-card">
-        <Photo url={hero ? urls[hero] : undefined} alt={card.name} eager />
+        <Photo url={hero ? urls[hero] : undefined} alt={card.name} eager missing={!hero} />
         {topRight && <div className="absolute right-3 top-3">{topRight}</div>}
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-ink/70 to-transparent" />
         <div className="absolute bottom-4 left-5 right-5 text-surface">

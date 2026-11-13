@@ -61,7 +61,7 @@ function LikesPage() {
               params={{ userId: p.id }}
               className="relative overflow-hidden rounded-3xl bg-surface shadow-card active:scale-[0.98]"
             >
-              <Photo url={urls[p.photoPaths[0]]} alt={p.name} />
+              <Photo url={urls[p.photoPaths[0]]} alt={p.name} missing={!p.photoPaths[0]} />
               <div className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-melt-orange text-surface shadow">
                 <Heart className="h-4 w-4" fill="currentColor" />
               </div>
