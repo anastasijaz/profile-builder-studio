@@ -36,3 +36,6 @@ dist-ssr
 .env.*
 !.env.example
 !.env.production
+
+# Vercel build output
+.vercel
