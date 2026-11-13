@@ -48,8 +48,21 @@ export function useProfileCard(userId: string) {
 export function useSwipe() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ target, kind }: { target: string; kind: "like" | "pass" }) => {
-      const { data, error } = await getSupabase().rpc("swipe", { p_target: target, p_kind: kind });
+    mutationFn: async ({
+      target,
+      kind,
+      promptId,
+    }: {
+      target: string;
+      kind: "like" | "pass";
+      /** The prompt card the like was on, if any. */
+      promptId?: string;
+    }) => {
+      const { data, error } = await getSupabase().rpc("swipe", {
+        p_target: target,
+        p_kind: kind,
+        p_prompt: promptId ?? null,
+      });
       if (error) throw error;
       return (data as string | null) ?? null;
     },

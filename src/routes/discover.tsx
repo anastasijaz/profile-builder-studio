@@ -41,10 +41,10 @@ function DiscoverPage() {
   const myPhoto = me.data?.photos[0]?.storage_path;
   const urls = useSignedUrls([myPhoto, match?.person.photoPaths[0]]).data ?? {};
 
-  const act = (kind: "like" | "pass") => {
+  const act = (kind: "like" | "pass", promptId?: string) => {
     if (!person) return;
     swipe.mutate(
-      { target: person.id, kind },
+      { target: person.id, kind, promptId },
       {
         onSuccess: (matchId) => {
           setSwiped((s) => new Set(s).add(person.id));
@@ -92,7 +92,7 @@ function DiscoverPage() {
             interests={interests.data!.byId}
             busy={swipe.isPending}
             onPass={() => act("pass")}
-            onLike={() => act("like")}
+            onLike={(promptId) => act("like", promptId)}
             topRight={
               <SafetyMenu
                 targetId={person.id}

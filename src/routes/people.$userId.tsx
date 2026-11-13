@@ -27,9 +27,9 @@ function PersonPage() {
   const myPhoto = me.data?.photos[0]?.storage_path;
   const urls = useSignedUrls([myPhoto, card.data?.photoPaths[0]]).data ?? {};
 
-  const act = (kind: "like" | "pass") =>
+  const act = (kind: "like" | "pass", promptId?: string) =>
     swipe.mutate(
-      { target: userId, kind },
+      { target: userId, kind, promptId },
       {
         onSuccess: (mid) => {
           if (mid) setMatchId(mid);
@@ -68,7 +68,7 @@ function PersonPage() {
             interests={interests.data!.byId}
             busy={swipe.isPending}
             onPass={() => act("pass")}
-            onLike={() => act("like")}
+            onLike={(promptId) => act("like", promptId)}
             topRight={
               <SafetyMenu
                 targetId={card.data.id}

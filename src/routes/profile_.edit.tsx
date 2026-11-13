@@ -3,7 +3,13 @@ import { useEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Field, PrimaryButton, TextArea, TextInput } from "@/components/FormBits";
-import { InterestPicker, LocationField, PhotoManager } from "@/components/ProfileFields";
+import {
+  InterestPicker,
+  LocationField,
+  PhotoManager,
+  PromptEditor,
+} from "@/components/ProfileFields";
+import { promptsSchema, type PromptDraft } from "@/lib/prompts";
 import { useUser } from "@/lib/auth";
 import { useInterests } from "@/lib/api/interests";
 import { photoActions } from "@/lib/api/photo-actions";
@@ -13,6 +19,7 @@ import {
   saveBio,
   saveInterests,
   saveLocation,
+  savePrompts,
   useMyFullProfile,
   useRefreshMyProfile,
 } from "@/lib/api/profiles";
@@ -39,6 +46,7 @@ function EditProfilePage() {
 
   const [form, setForm] = useState({ displayName: "", city: "", bio: "" });
   const [picked, setPicked] = useState<number[]>([]);
+  const [prompts, setPrompts] = useState<PromptDraft[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -51,6 +59,7 @@ function EditProfilePage() {
       bio: profile.data.bio,
     });
     setPicked(profile.data.interestIds);
+    setPrompts(profile.data.prompts.map(({ question, answer }) => ({ question, answer })));
     setLoaded(true);
   }, [profile.data, loaded]);
 
@@ -61,13 +70,15 @@ function EditProfilePage() {
   const set = (k: keyof typeof form) => (v: string) => setForm((f) => ({ ...f, [k]: v }));
 
   const onSave = async () => {
-    const errs = {
+    const errs: Record<string, string> = {
       ...fieldErrors(basicsSchema, { ...form, birthdate: p.birthdate }),
       ...(fieldErrors(bioSchema, form.bio)._ ? { bio: fieldErrors(bioSchema, form.bio)._ } : {}),
       ...(fieldErrors(interestsSchema, picked)._
         ? { interests: fieldErrors(interestsSchema, picked)._ }
         : {}),
     };
+    const promptCheck = promptsSchema.safeParse(prompts);
+    if (!promptCheck.success) errs.prompts = promptCheck.error.issues[0].message;
     setErrors(errs);
     if (Object.keys(errs).length) return;
     setSaving(true);
@@ -75,6 +86,7 @@ function EditProfilePage() {
       await saveBasics(user.id, true, { ...form, birthdate: p.birthdate });
       await saveBio(user.id, form.bio);
       await saveInterests(user.id, p.interestIds, picked);
+      await savePrompts(user.id, p.prompts, prompts);
       await refresh();
       qc.invalidateQueries({ queryKey: ["discover"] });
       toast.success("Profile saved");
@@ -132,6 +144,14 @@ function EditProfilePage() {
         <Field label="Your sports" error={errors.interests}>
           <InterestPicker interests={interests.data.list} value={picked} onChange={setPicked} />
         </Field>
+
+        <div>
+          <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/60">
+            Prompts
+          </span>
+          <PromptEditor value={prompts} onChange={setPrompts} />
+          {errors.prompts && <p className="mt-1 text-xs text-melt-orange">{errors.prompts}</p>}
+        </div>
 
         <Field label="Bio" error={errors.bio} hint={`${form.bio.length}/${BIO_MAX}`}>
           <TextArea value={form.bio} onChange={set("bio")} rows={5} maxLength={BIO_MAX} />

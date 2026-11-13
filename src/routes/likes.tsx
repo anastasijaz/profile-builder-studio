@@ -69,7 +69,15 @@ function LikesPage() {
                 <p className="font-serif text-lg leading-none">
                   {p.name}, {p.age}
                 </p>
-                <p className="mt-1 text-[10px] opacity-90">Melted for you</p>
+                <p className="mt-1 text-[10px] opacity-90">
+                  {p.likedPrompt ? (
+                    <>
+                      Melted on: <em className="not-italic">{p.likedPrompt}</em>
+                    </>
+                  ) : (
+                    "Melted for you"
+                  )}
+                </p>
               </div>
             </Link>
           ))}

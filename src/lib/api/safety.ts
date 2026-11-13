@@ -76,7 +76,7 @@ export function useMyBlocks() {
 /** Download everything Melt stores about the user as a JSON file. */
 export async function downloadMyData() {
   const supabase = getSupabase();
-  const { data, error } = await supabase.rpc("export_my_data");
+  const { data, error } = await supabase.rpc("export_my_data_v2");
   if (error) throw error;
   const exported = data as { photos?: { storage_path: string; signed_url?: string }[] };
   // Add short-lived download links so the photos themselves can be saved too.

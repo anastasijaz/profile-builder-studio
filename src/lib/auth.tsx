@@ -27,15 +27,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user: session?.user ?? null,
       });
 
-    supabase.auth.getSession().then(({ data }) => apply(data.session));
-    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+    // Until the initial session is known (including a dev auto-login), ignore
+    // auth events so the gate doesn't flash the welcome page.
+    let settling = true;
+    supabase.auth.getSession().then(async ({ data }) => {
+      let session = data.session;
+      const devLogin = devAutoLogin();
+      if (!session && devLogin) {
+        const res = await supabase.auth.signInWithPassword(devLogin);
+        if (res.error) console.warn("[dev auto-login] failed:", res.error.message);
+        session = res.data.session;
+      }
+      settling = false;
       apply(session);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_OUT") queryClient.clear();
+      if (settling || event === "INITIAL_SESSION") return;
+      apply(session);
     });
     return () => sub.subscription.unsubscribe();
   }, [queryClient]);
 
   return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
+}
+
+const DEV_AUTO_LOGIN_OFF = "melt.devAutoLoginOff";
+
+/**
+ * DEV ONLY: skip sign-up by signing in to a test account automatically.
+ * Active only under `vite dev` (never in production builds) and only when
+ * VITE_DEV_LOGIN_EMAIL / VITE_DEV_LOGIN_PASSWORD are set in .env.local.
+ * Signing out turns it off until the browser tab is closed, so the real
+ * magic-link flow can still be tested.
+ */
+function devAutoLogin(): { email: string; password: string } | null {
+  if (!import.meta.env.DEV) return null;
+  const email = import.meta.env.VITE_DEV_LOGIN_EMAIL as string | undefined;
+  const password = import.meta.env.VITE_DEV_LOGIN_PASSWORD as string | undefined;
+  if (!email || !password) return null;
+  try {
+    if (sessionStorage.getItem(DEV_AUTO_LOGIN_OFF)) return null;
+  } catch {
+    /* storage blocked: still allow */
+  }
+  return { email, password };
 }
 
 export function useAuth() {
@@ -79,6 +115,11 @@ export function useMyProfileRow() {
 }
 
 export async function signOut() {
+  try {
+    sessionStorage.setItem(DEV_AUTO_LOGIN_OFF, "1");
+  } catch {
+    /* ignore */
+  }
   await getSupabase().auth.signOut();
 }
 

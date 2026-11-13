@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Heart, MapPin, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { distanceLabel } from "@/lib/geo";
@@ -60,8 +61,48 @@ export function Photo({
   );
 }
 
+/** Prompt card (question + big serif answer) with an optional melt heart. */
+export function PromptCard({
+  question,
+  answer,
+  onLike,
+  likeLabel,
+  busy,
+}: {
+  question: string;
+  answer: string;
+  onLike?: () => void;
+  likeLabel?: string;
+  busy?: boolean;
+}) {
+  return (
+    <div className="rounded-3xl bg-surface p-5 shadow-card">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-melt-orange">
+            {question}
+          </p>
+          <p className="mt-2 whitespace-pre-line break-words font-serif text-2xl leading-snug text-ink">
+            {answer}
+          </p>
+        </div>
+        {onLike && (
+          <button
+            onClick={onLike}
+            disabled={busy}
+            aria-label={likeLabel}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ink/10 bg-surface text-ink/60 transition-all hover:text-melt-orange active:scale-90 disabled:opacity-50"
+          >
+            <Heart className="h-5 w-5" strokeWidth={1.75} />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /**
- * A full, scrollable profile: hero, shared sports, bio, extra photos and the
+ * A full, scrollable profile: hero, shared sports, bio, prompts, photos and the
  * pass / melt buttons. Same layout as the original Lovable discover feed.
  */
 export function ProfileFeed({
@@ -75,7 +116,8 @@ export function ProfileFeed({
   card: ProfileCard;
   interests: Map<number, Interest>;
   onPass?: () => void;
-  onLike?: () => void;
+  /** Called with the prompt's id when the heart on a prompt card is used. */
+  onLike?: (promptId?: string) => void;
   busy?: boolean;
   /** Slot over the hero photo, e.g. the safety menu. */
   topRight?: React.ReactNode;
@@ -120,34 +162,33 @@ export function ProfileFeed({
       )}
 
       {card.bio && (
-        <div className="rounded-3xl bg-surface p-5 shadow-card">
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-melt-orange">
-                About me
-              </p>
-              <p className="mt-2 whitespace-pre-line break-words font-serif text-2xl leading-snug text-ink">
-                {card.bio}
-              </p>
-            </div>
-            {onLike && (
-              <button
-                onClick={onLike}
-                disabled={busy}
-                aria-label={`Melt for ${card.name}`}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ink/10 bg-surface text-ink/60 transition-all hover:text-melt-orange active:scale-90 disabled:opacity-50"
-              >
-                <Heart className="h-5 w-5" strokeWidth={1.75} />
-              </button>
-            )}
-          </div>
-        </div>
+        <PromptCard
+          question="About me"
+          answer={card.bio}
+          onLike={onLike ? () => onLike() : undefined}
+          likeLabel={`Melt for ${card.name}`}
+          busy={busy}
+        />
       )}
 
-      {rest.map((path, i) => (
-        <div key={path} className="overflow-hidden rounded-3xl bg-surface shadow-card">
-          <Photo url={urls[path]} alt={`${card.name} photo ${i + 2}`} />
-        </div>
+      {/* Prompts interleaved with photos, as in the original design. */}
+      {Array.from({ length: Math.max(card.prompts.length, rest.length) }, (_, i) => (
+        <Fragment key={i}>
+          {card.prompts[i] && (
+            <PromptCard
+              question={card.prompts[i].question}
+              answer={card.prompts[i].answer}
+              onLike={onLike ? () => onLike(card.prompts[i].id) : undefined}
+              likeLabel={`Melt on “${card.prompts[i].question}”`}
+              busy={busy}
+            />
+          )}
+          {rest[i] && (
+            <div className="overflow-hidden rounded-3xl bg-surface shadow-card">
+              <Photo url={urls[rest[i]]} alt={`${card.name} photo ${i + 2}`} />
+            </div>
+          )}
+        </Fragment>
       ))}
 
       {(onPass || onLike) && (
@@ -164,7 +205,7 @@ export function ProfileFeed({
           )}
           {onLike && (
             <button
-              onClick={onLike}
+              onClick={() => onLike()}
               disabled={busy}
               aria-label={`Melt for ${card.name}`}
               className="flex h-16 w-16 items-center justify-center rounded-full bg-melt-orange text-surface shadow-[0_10px_24px_-6px_rgba(255,143,31,0.65)] active:scale-90 disabled:opacity-50"

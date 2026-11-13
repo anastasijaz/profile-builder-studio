@@ -1,6 +1,34 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getSupabase } from "../supabase";
 import { myProfileKey, useAuth } from "../auth";
+import { diffPrompts, type Prompt, type PromptDraft } from "../prompts";
+
+/**
+ * Save prompt answers. Existing prompts are updated in place (so likes that
+ * were "melted on" them keep their link); removed ones are deleted.
+ */
+export async function savePrompts(uid: string, current: Prompt[], next: PromptDraft[]) {
+  const supabase = getSupabase();
+  const { remove, upsert } = diffPrompts(current, next);
+  if (remove.length) {
+    const { error } = await supabase.from("profile_prompts").delete().in("id", remove);
+    if (error) throw error;
+  }
+  for (const p of upsert) {
+    const { error } = p.id
+      ? await supabase
+          .from("profile_prompts")
+          .update({ answer: p.answer, position: p.position })
+          .eq("id", p.id)
+      : await supabase.from("profile_prompts").insert({
+          user_id: uid,
+          question: p.question,
+          answer: p.answer,
+          position: p.position,
+        });
+    if (error) throw error;
+  }
+}
 
 export type MyPhoto = { id: string; storage_path: string; position: number };
 
@@ -14,6 +42,7 @@ export type MyFullProfile = {
   interestIds: number[];
   photos: MyPhoto[];
   hasLocation: boolean;
+  prompts: Prompt[];
 };
 
 export const myFullProfileKey = (uid: string | undefined) => ["my-full-profile", uid] as const;
@@ -26,7 +55,7 @@ export function useMyFullProfile() {
     queryFn: async (): Promise<MyFullProfile> => {
       const supabase = getSupabase();
       const uid = user!.id;
-      const [p, i, ph, loc] = await Promise.all([
+      const [p, i, ph, loc, pr] = await Promise.all([
         supabase
           .from("profiles")
           .select("display_name, birthdate, city, bio, onboarded_at")
@@ -40,8 +69,13 @@ export function useMyFullProfile() {
           .order("position")
           .order("created_at"),
         supabase.from("profile_locations").select("user_id").eq("user_id", uid).maybeSingle(),
+        supabase
+          .from("profile_prompts")
+          .select("id, question, answer")
+          .eq("user_id", uid)
+          .order("position"),
       ]);
-      for (const r of [p, i, ph, loc]) if (r.error) throw r.error;
+      for (const r of [p, i, ph, loc, pr]) if (r.error) throw r.error;
       return {
         exists: Boolean(p.data),
         displayName: p.data?.display_name ?? "",
@@ -52,6 +86,7 @@ export function useMyFullProfile() {
         interestIds: (i.data ?? []).map((r) => r.interest_id as number),
         photos: (ph.data ?? []) as MyPhoto[],
         hasLocation: Boolean(loc.data),
+        prompts: (pr.data ?? []) as Prompt[],
       };
     },
   });

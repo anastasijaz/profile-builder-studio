@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Pencil, Settings } from "lucide-react";
 import { PhoneShell, PageHeader } from "@/components/PhoneShell";
-import { Photo } from "@/components/ProfileFeed";
+import { Photo, PromptCard } from "@/components/ProfileFeed";
 import { SettingsSheet } from "@/components/SettingsSheet";
 import { ageFrom } from "@/lib/age";
 import { useInterests } from "@/lib/api/interests";
@@ -112,6 +112,12 @@ function ProfilePage() {
               )}
             </div>
           </section>
+
+          {p.prompts.map((pr) => (
+            <section key={pr.id} className="mt-4 px-5">
+              <PromptCard question={pr.question} answer={pr.answer} />
+            </section>
+          ))}
 
           {rest.map((ph) => (
             <section key={ph.id} className="mt-4 px-5">

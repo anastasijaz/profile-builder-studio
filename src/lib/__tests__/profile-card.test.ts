@@ -33,6 +33,8 @@ describe("toProfileCard", () => {
       sharedInterestIds: [3],
       interestIds: [1, 3],
       photoPaths: ["u1/a.jpg"],
+      prompts: [],
+      likedPrompt: null,
     });
   });
 

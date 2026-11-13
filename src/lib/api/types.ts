@@ -12,6 +12,8 @@ export type ProfileCardRow = {
   interest_ids: number[] | null;
   photo_paths: string[] | null;
   created_at: string;
+  prompts?: { id: string; question: string; answer: string }[] | null;
+  liked_prompt?: string | null;
 };
 
 /** What the UI renders for another person. */
@@ -25,6 +27,9 @@ export type ProfileCard = {
   sharedInterestIds: number[];
   interestIds: number[];
   photoPaths: string[];
+  prompts: { id: string; question: string; answer: string }[];
+  /** Only set in "likes received": the prompt they melted on. */
+  likedPrompt: string | null;
 };
 
 export function toProfileCard(row: ProfileCardRow): ProfileCard {
@@ -38,6 +43,8 @@ export function toProfileCard(row: ProfileCardRow): ProfileCard {
     sharedInterestIds: row.shared_interest_ids ?? [],
     interestIds: row.interest_ids ?? [],
     photoPaths: row.photo_paths ?? [],
+    prompts: row.prompts ?? [],
+    likedPrompt: row.liked_prompt ?? null,
   };
 }
 

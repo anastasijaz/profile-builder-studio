@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { Camera, Loader2, LocateFixed, Star, Trash2 } from "lucide-react";
+import { Camera, Loader2, LocateFixed, Plus, Star, Trash2 } from "lucide-react";
+import { MAX_PROMPTS, PROMPT_ANSWER_MAX, PROMPT_QUESTIONS, type PromptDraft } from "@/lib/prompts";
 import { cn } from "@/lib/utils";
 import { getRoundedBrowserLocation } from "@/lib/geo";
 import { useSignedUrls } from "@/lib/api/photos";
@@ -201,6 +202,71 @@ export function PhotoManager({
       <p className="mt-2 text-xs text-ink/50">
         Up to {MAX_PHOTOS} photos. We remove hidden metadata (like GPS) before uploading.
       </p>
+    </div>
+  );
+}
+
+/** Pick up to 3 sport prompts and answer them (as in the original design). */
+export function PromptEditor({
+  value,
+  onChange,
+}: {
+  value: PromptDraft[];
+  onChange: (v: PromptDraft[]) => void;
+}) {
+  const used = new Set(value.map((p) => p.question));
+  const unused = PROMPT_QUESTIONS.filter((q) => !used.has(q));
+  const update = (i: number, patch: Partial<PromptDraft>) =>
+    onChange(value.map((p, j) => (j === i ? { ...p, ...patch } : p)));
+
+  return (
+    <div className="space-y-3">
+      {value.map((p, i) => (
+        <div key={i} className="rounded-3xl bg-surface p-4 shadow-card">
+          <div className="flex items-center gap-2">
+            <select
+              value={p.question}
+              onChange={(e) => update(i, { question: e.target.value })}
+              aria-label="Prompt question"
+              className="h-10 min-w-0 flex-1 rounded-full border border-ink/10 bg-page px-3 text-xs font-semibold uppercase tracking-wide text-melt-orange outline-none focus:border-melt-orange"
+            >
+              {[p.question, ...unused].map((q) => (
+                <option key={q} value={q}>
+                  {q}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={() => onChange(value.filter((_, j) => j !== i))}
+              aria-label="Remove prompt"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink/50 active:scale-95"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+          <textarea
+            value={p.answer}
+            onChange={(e) => update(i, { answer: e.target.value })}
+            maxLength={PROMPT_ANSWER_MAX}
+            rows={2}
+            placeholder="Your answer…"
+            className="mt-3 w-full resize-none bg-transparent font-serif text-xl leading-snug text-ink outline-none placeholder:text-ink/30"
+          />
+          <p className="text-right text-[10px] text-ink/40">
+            {p.answer.length}/{PROMPT_ANSWER_MAX}
+          </p>
+        </div>
+      ))}
+      {value.length < MAX_PROMPTS && unused.length > 0 && (
+        <button
+          type="button"
+          onClick={() => onChange([...value, { question: unused[0], answer: "" }])}
+          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-ink/15 bg-surface text-sm font-semibold text-ink/60 active:scale-[0.98]"
+        >
+          <Plus className="h-4 w-4" /> Add a prompt ({value.length}/{MAX_PROMPTS})
+        </button>
+      )}
     </div>
   );
 }

@@ -4,7 +4,13 @@ import { ChevronLeft } from "lucide-react";
 import { toast } from "sonner";
 import { MeltWordmark } from "@/components/MeltWordmark";
 import { CheckRow, Field, PrimaryButton, TextArea, TextInput } from "@/components/FormBits";
-import { InterestPicker, LocationField, PhotoManager } from "@/components/ProfileFields";
+import {
+  InterestPicker,
+  LocationField,
+  PhotoManager,
+  PromptEditor,
+} from "@/components/ProfileFields";
+import { promptsSchema, type PromptDraft } from "@/lib/prompts";
 import { signOut, useUser } from "@/lib/auth";
 import { buildConsent, hasValidConsent } from "@/lib/consent";
 import { maxAdultBirthdate } from "@/lib/age";
@@ -18,6 +24,7 @@ import {
   saveBio,
   saveInterests,
   saveLocation,
+  savePrompts,
   useMyFullProfile,
   useRefreshMyProfile,
 } from "@/lib/api/profiles";
@@ -34,7 +41,7 @@ export const Route = createFileRoute("/onboarding")({
   head: () => ({ meta: [{ title: "Set up your profile — Melt" }] }),
 });
 
-const STEPS = ["About you", "Your sports", "Your bio", "Your photos"] as const;
+const STEPS = ["About you", "Your sports", "Your prompts", "Your bio", "Your photos"] as const;
 
 function OnboardingPage() {
   const user = useUser();
@@ -49,6 +56,7 @@ function OnboardingPage() {
   const [form, setForm] = useState({ displayName: "", birthdate: "", city: "", bio: "" });
   const [pendingLocation, setPendingLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [picked, setPicked] = useState<number[]>([]);
+  const [prompts, setPrompts] = useState<PromptDraft[]>([]);
   const [consent, setConsent] = useState({ adult: false, terms: false, privacy: false });
   const needsConsent = !hasValidConsent(user.user_metadata);
 
@@ -59,7 +67,8 @@ function OnboardingPage() {
     const p = profile.data;
     setForm({ displayName: p.displayName, birthdate: p.birthdate, city: p.city, bio: p.bio });
     setPicked(p.interestIds);
-    setStep(!p.exists ? 0 : p.interestIds.length === 0 ? 1 : p.photos.length === 0 ? 2 : 3);
+    setPrompts(p.prompts.map(({ question, answer }) => ({ question, answer })));
+    setStep(!p.exists ? 0 : p.interestIds.length === 0 ? 1 : p.photos.length === 0 ? 2 : 4);
     setHydrated(true);
   }, [profile.data, hydrated]);
 
@@ -102,6 +111,13 @@ function OnboardingPage() {
     setErrors(errs._ ? { interests: errs._ } : {});
     if (errs._) return;
     save(() => saveInterests(user.id, profile.data!.interestIds, picked));
+  };
+
+  const nextPrompts = () => {
+    const res = promptsSchema.safeParse(prompts);
+    setErrors(res.success ? {} : { prompts: res.error.issues[0].message });
+    if (!res.success) return;
+    save(() => savePrompts(user.id, profile.data!.prompts, prompts));
   };
 
   const nextBio = () => {
@@ -275,6 +291,16 @@ function OnboardingPage() {
         )}
 
         {step === 2 && (
+          <>
+            <p className="text-sm text-ink/60">
+              Pick up to 3 prompts and answer them. People can melt on a specific answer.
+            </p>
+            <PromptEditor value={prompts} onChange={setPrompts} />
+            {errors.prompts && <p className="text-xs text-melt-orange">{errors.prompts}</p>}
+          </>
+        )}
+
+        {step === 3 && (
           <Field
             label="Short bio (optional)"
             error={errors.bio}
@@ -290,7 +316,7 @@ function OnboardingPage() {
           </Field>
         )}
 
-        {step === 3 && (
+        {step === 4 && (
           <>
             <p className="text-sm text-ink/60">
               Add at least one photo where your face is clearly visible.
@@ -323,11 +349,16 @@ function OnboardingPage() {
             </PrimaryButton>
           )}
           {step === 2 && (
+            <PrimaryButton onClick={nextPrompts} disabled={saving}>
+              {saving ? "Saving…" : prompts.length ? "Continue" : "Skip for now"}
+            </PrimaryButton>
+          )}
+          {step === 3 && (
             <PrimaryButton onClick={nextBio} disabled={saving}>
               {saving ? "Saving…" : "Continue"}
             </PrimaryButton>
           )}
-          {step === 3 && (
+          {step === 4 && (
             <PrimaryButton onClick={finish} disabled={saving || photos.length === 0}>
               {saving ? "Finishing…" : "Start melting"}
             </PrimaryButton>
