@@ -85,7 +85,7 @@ export function MatchMeltOverlay({ youPhoto, themPhoto, themName, matchId, onClo
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-melt-orange">
           It&apos;s a
         </p>
-        <h2 className="mt-1 font-serif text-6xl italic text-ink">melt</h2>
+        <h2 className="melt-wordmark mt-1 font-serif text-6xl italic text-ink">melt</h2>
         <p className="mt-2 text-sm text-ink/70">
           You and {themName} are melting together
         </p>

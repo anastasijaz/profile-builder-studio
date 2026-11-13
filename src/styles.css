@@ -167,6 +167,7 @@
     background-color: var(--color-page);
     color: var(--color-ink);
     font-family: var(--font-montserrat);
+    font-weight: 500;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -206,4 +207,15 @@
 @keyframes fade-up {
   0% { opacity: 0; transform: translateY(12px); }
   100% { opacity: 1; transform: translateY(0); }
+}
+
+/*
+ * Instrument Serif only ships in one weight, so thicken it with a stroke in
+ * the text colour (scales with font size, keeps the letter shapes).
+ */
+.font-serif {
+  -webkit-text-stroke: 0.03em currentColor;
+}
+.melt-wordmark {
+  -webkit-text-stroke: 0.055em currentColor;
 }

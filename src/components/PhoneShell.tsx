@@ -40,7 +40,7 @@ export function PageHeader({
 }) {
   return (
     <header className="flex items-center justify-between px-5 pt-4 pb-2">
-      <div className="text-2xl font-serif italic text-ink">
+      <div className="melt-wordmark text-2xl font-serif italic text-ink">
         melt<span className="text-melt-orange">.</span>
       </div>
       <div className="flex items-center gap-2">
