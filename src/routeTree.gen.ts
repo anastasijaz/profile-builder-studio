@@ -14,8 +14,11 @@ import { Route as ActivitiesRouteImport } from './routes/activities'
 import { Route as ChatsRouteImport } from './routes/chats'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as LikesRouteImport } from './routes/likes'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as ActivitiesNewRouteImport } from './routes/activities_.new'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ChatsIndexRouteImport } from './routes/chats.index'
 import { Route as ChatsMatchIdRouteImport } from './routes/chats.$matchId'
 
@@ -44,14 +47,29 @@ const LikesRoute = LikesRouteImport.update({
   path: '/likes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ActivitiesNewRoute = ActivitiesNewRouteImport.update({
   id: '/activities_/new',
   path: '/activities/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatsIndexRoute = ChatsIndexRouteImport.update({
@@ -71,8 +89,11 @@ export interface FileRoutesByFullPath {
   '/chats': typeof ChatsRouteWithChildren
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
+  '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
+  '/welcome': typeof WelcomeRoute
   '/activities/new': typeof ActivitiesNewRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
   '/chats/': typeof ChatsIndexRoute
 }
@@ -81,8 +102,11 @@ export interface FileRoutesByTo {
   '/activities': typeof ActivitiesRoute
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
+  '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
+  '/welcome': typeof WelcomeRoute
   '/activities/new': typeof ActivitiesNewRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
   '/chats': typeof ChatsIndexRoute
 }
@@ -93,8 +117,11 @@ export interface FileRoutesById {
   '/chats': typeof ChatsRouteWithChildren
   '/discover': typeof DiscoverRoute
   '/likes': typeof LikesRoute
+  '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
+  '/welcome': typeof WelcomeRoute
   '/activities_/new': typeof ActivitiesNewRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
   '/chats/': typeof ChatsIndexRoute
 }
@@ -106,8 +133,11 @@ export interface FileRouteTypes {
     | '/chats'
     | '/discover'
     | '/likes'
+    | '/onboarding'
     | '/profile'
+    | '/welcome'
     | '/activities/new'
+    | '/auth/callback'
     | '/chats/$matchId'
     | '/chats/'
   fileRoutesByTo: FileRoutesByTo
@@ -116,8 +146,11 @@ export interface FileRouteTypes {
     | '/activities'
     | '/discover'
     | '/likes'
+    | '/onboarding'
     | '/profile'
+    | '/welcome'
     | '/activities/new'
+    | '/auth/callback'
     | '/chats/$matchId'
     | '/chats'
   id:
@@ -127,8 +160,11 @@ export interface FileRouteTypes {
     | '/chats'
     | '/discover'
     | '/likes'
+    | '/onboarding'
     | '/profile'
+    | '/welcome'
     | '/activities_/new'
+    | '/auth/callback'
     | '/chats/$matchId'
     | '/chats/'
   fileRoutesById: FileRoutesById
@@ -139,8 +175,11 @@ export interface RootRouteChildren {
   ChatsRoute: typeof ChatsRouteWithChildren
   DiscoverRoute: typeof DiscoverRoute
   LikesRoute: typeof LikesRoute
+  OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
+  WelcomeRoute: typeof WelcomeRoute
   ActivitiesNewRoute: typeof ActivitiesNewRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -180,6 +219,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LikesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -187,11 +233,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/activities_/new': {
       id: '/activities_/new'
       path: '/activities/new'
       fullPath: '/activities/new'
       preLoaderRoute: typeof ActivitiesNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chats/': {
@@ -229,8 +289,11 @@ const rootRouteChildren: RootRouteChildren = {
   ChatsRoute: ChatsRouteWithChildren,
   DiscoverRoute: DiscoverRoute,
   LikesRoute: LikesRoute,
+  OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
+  WelcomeRoute: WelcomeRoute,
   ActivitiesNewRoute: ActivitiesNewRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
