@@ -3,8 +3,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { MessageCircle } from "lucide-react";
 
 type Props = {
-  youPhoto: string;
-  themPhoto: string;
+  youPhoto?: string;
+  themPhoto?: string;
   themName: string;
   matchId: string;
   onClose: () => void;
@@ -136,7 +136,7 @@ function Avatar({
   direction,
   ring,
 }: {
-  src: string;
+  src?: string;
   delay: number;
   direction: "left" | "right";
   ring: string;

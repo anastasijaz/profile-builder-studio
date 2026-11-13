@@ -21,6 +21,8 @@ import { Route as ActivitiesNewRouteImport } from './routes/activities_.new'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ChatsIndexRouteImport } from './routes/chats.index'
 import { Route as ChatsMatchIdRouteImport } from './routes/chats.$matchId'
+import { Route as PeopleUserIdRouteImport } from './routes/people.$userId'
+import { Route as ProfileEditRouteImport } from './routes/profile_.edit'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -82,6 +84,16 @@ const ChatsMatchIdRoute = ChatsMatchIdRouteImport.update({
   path: '/$matchId',
   getParentRoute: () => ChatsRoute,
 } as any)
+const PeopleUserIdRoute = PeopleUserIdRouteImport.update({
+  id: '/people/$userId',
+  path: '/people/$userId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileEditRoute = ProfileEditRouteImport.update({
+  id: '/profile_/edit',
+  path: '/profile/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -95,6 +107,8 @@ export interface FileRoutesByFullPath {
   '/activities/new': typeof ActivitiesNewRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
+  '/people/$userId': typeof PeopleUserIdRoute
+  '/profile/edit': typeof ProfileEditRoute
   '/chats/': typeof ChatsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -108,6 +122,8 @@ export interface FileRoutesByTo {
   '/activities/new': typeof ActivitiesNewRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
+  '/people/$userId': typeof PeopleUserIdRoute
+  '/profile/edit': typeof ProfileEditRoute
   '/chats': typeof ChatsIndexRoute
 }
 export interface FileRoutesById {
@@ -123,6 +139,8 @@ export interface FileRoutesById {
   '/activities_/new': typeof ActivitiesNewRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/chats/$matchId': typeof ChatsMatchIdRoute
+  '/people/$userId': typeof PeopleUserIdRoute
+  '/profile_/edit': typeof ProfileEditRoute
   '/chats/': typeof ChatsIndexRoute
 }
 export interface FileRouteTypes {
@@ -139,6 +157,8 @@ export interface FileRouteTypes {
     | '/activities/new'
     | '/auth/callback'
     | '/chats/$matchId'
+    | '/people/$userId'
+    | '/profile/edit'
     | '/chats/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -152,6 +172,8 @@ export interface FileRouteTypes {
     | '/activities/new'
     | '/auth/callback'
     | '/chats/$matchId'
+    | '/people/$userId'
+    | '/profile/edit'
     | '/chats'
   id:
     | '__root__'
@@ -166,6 +188,8 @@ export interface FileRouteTypes {
     | '/activities_/new'
     | '/auth/callback'
     | '/chats/$matchId'
+    | '/people/$userId'
+    | '/profile_/edit'
     | '/chats/'
   fileRoutesById: FileRoutesById
 }
@@ -180,6 +204,8 @@ export interface RootRouteChildren {
   WelcomeRoute: typeof WelcomeRoute
   ActivitiesNewRoute: typeof ActivitiesNewRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  PeopleUserIdRoute: typeof PeopleUserIdRoute
+  ProfileEditRoute: typeof ProfileEditRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -268,6 +294,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatsMatchIdRouteImport
       parentRoute: typeof ChatsRoute
     }
+    '/people/$userId': {
+      id: '/people/$userId'
+      path: '/people/$userId'
+      fullPath: '/people/$userId'
+      preLoaderRoute: typeof PeopleUserIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile_/edit': {
+      id: '/profile_/edit'
+      path: '/profile/edit'
+      fullPath: '/profile/edit'
+      preLoaderRoute: typeof ProfileEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -294,6 +334,8 @@ const rootRouteChildren: RootRouteChildren = {
   WelcomeRoute: WelcomeRoute,
   ActivitiesNewRoute: ActivitiesNewRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  PeopleUserIdRoute: PeopleUserIdRoute,
+  ProfileEditRoute: ProfileEditRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

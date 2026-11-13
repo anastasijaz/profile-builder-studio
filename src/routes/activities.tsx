@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import { PhoneShell, PageHeader } from "@/components/PhoneShell";
 import { TopToggle } from "@/components/TopToggle";
+import { PreviewBanner } from "@/components/PreviewBanner";
 import { ACTIVITIES, type Activity } from "@/data/activities";
 import { useUserActivities } from "@/data/user-activities";
 import { cn } from "@/lib/utils";
@@ -193,6 +194,8 @@ function ActivitiesPage() {
           Signed up
         </button>
       </div>
+
+      <PreviewBanner className="mx-5 mt-4" />
 
       <section className="mt-5 space-y-5 px-5">
         {list.length === 0 ? (

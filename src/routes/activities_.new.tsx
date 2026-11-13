@@ -1,3 +1,4 @@
+import { PreviewBanner } from "@/components/PreviewBanner";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { ChevronLeft } from "lucide-react";
@@ -99,6 +100,7 @@ function NewActivityPage() {
       </header>
 
       <form onSubmit={onSubmit} className="mx-auto max-w-[480px] space-y-5 px-5 py-5 pb-28">
+        <PreviewBanner />
         <Field label="Cover">
           <div className="flex gap-2 overflow-x-auto pb-1">
             {COVERS.map((src) => (
