@@ -101,8 +101,7 @@ user, delete them under Authentication → Users; their data cascades.
 
 - Fill in every highlighted `[placeholder]` on `/privacy` and `/terms`, and have both reviewed.
   They are drafts, not legal advice.
-- Add an **Impressum** (§ 5 DDG); this is usually required for German services.
-- **Self-host the fonts.** Montserrat and Instrument Serif are loaded from Google Fonts in
-  `src/routes/__root.tsx`, which sends visitors' IP addresses to Google. German courts have found
-  this unlawful without consent.
+- Replace the **mock Impressum** (`/impressum`, § 5 DDG) with your real details.
+- Fonts are self-hosted via `@fontsource` (imported in `src/styles.css`), so no visitor data goes
+  to Google Fonts. Keep it that way.
 - Accept Supabase's DPA (Dashboard → Organization → Legal Documents), and set up custom SMTP.

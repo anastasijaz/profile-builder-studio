@@ -142,6 +142,11 @@ function WelcomePage() {
             </p>
           </form>
         )}
+        <nav className="mt-auto flex justify-center gap-4 pt-10 text-xs text-ink/50">
+          <a href="/privacy">Privacy</a>
+          <a href="/terms">Terms</a>
+          <a href="/impressum">Impressum</a>
+        </nav>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ActivitiesRouteImport } from './routes/activities'
 import { Route as ChatsRouteImport } from './routes/chats'
 import { Route as DiscoverRouteImport } from './routes/discover'
+import { Route as ImpressumRouteImport } from './routes/impressum'
 import { Route as LikesRouteImport } from './routes/likes'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -44,6 +45,11 @@ const ChatsRoute = ChatsRouteImport.update({
 const DiscoverRoute = DiscoverRouteImport.update({
   id: '/discover',
   path: '/discover',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImpressumRoute = ImpressumRouteImport.update({
+  id: '/impressum',
+  path: '/impressum',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LikesRoute = LikesRouteImport.update({
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/activities': typeof ActivitiesRoute
   '/chats': typeof ChatsRouteWithChildren
   '/discover': typeof DiscoverRoute
+  '/impressum': typeof ImpressumRoute
   '/likes': typeof LikesRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/activities': typeof ActivitiesRoute
   '/discover': typeof DiscoverRoute
+  '/impressum': typeof ImpressumRoute
   '/likes': typeof LikesRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/activities': typeof ActivitiesRoute
   '/chats': typeof ChatsRouteWithChildren
   '/discover': typeof DiscoverRoute
+  '/impressum': typeof ImpressumRoute
   '/likes': typeof LikesRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/activities'
     | '/chats'
     | '/discover'
+    | '/impressum'
     | '/likes'
     | '/onboarding'
     | '/privacy'
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/'
     | '/activities'
     | '/discover'
+    | '/impressum'
     | '/likes'
     | '/onboarding'
     | '/privacy'
@@ -203,6 +214,7 @@ export interface FileRouteTypes {
     | '/activities'
     | '/chats'
     | '/discover'
+    | '/impressum'
     | '/likes'
     | '/onboarding'
     | '/privacy'
@@ -222,6 +234,7 @@ export interface RootRouteChildren {
   ActivitiesRoute: typeof ActivitiesRoute
   ChatsRoute: typeof ChatsRouteWithChildren
   DiscoverRoute: typeof DiscoverRoute
+  ImpressumRoute: typeof ImpressumRoute
   LikesRoute: typeof LikesRoute
   OnboardingRoute: typeof OnboardingRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -262,6 +275,13 @@ declare module '@tanstack/react-router' {
       path: '/discover'
       fullPath: '/discover'
       preLoaderRoute: typeof DiscoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/impressum': {
+      id: '/impressum'
+      path: '/impressum'
+      fullPath: '/impressum'
+      preLoaderRoute: typeof ImpressumRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/likes': {
@@ -368,6 +388,7 @@ const rootRouteChildren: RootRouteChildren = {
   ActivitiesRoute: ActivitiesRoute,
   ChatsRoute: ChatsRouteWithChildren,
   DiscoverRoute: DiscoverRoute,
+  ImpressumRoute: ImpressumRoute,
   LikesRoute: LikesRoute,
   OnboardingRoute: OnboardingRoute,
   PrivacyRoute: PrivacyRoute,

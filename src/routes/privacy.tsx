@@ -111,12 +111,8 @@ function PrivacyPage() {
           </strong>
           .
         </li>
-        <li>
-          <strong>Google Fonts</strong> (Google Ireland Ltd.): the app currently loads fonts from
-          Google's servers, which sends your IP address to Google.{" "}
-          <Todo>Remove this item once fonts are self-hosted (recommended)</Todo>.
-        </li>
       </UL>
+      <P>Fonts are served from our own server; we don't load anything from Google.</P>
 
       <H2>5. How long we keep it</H2>
       <UL>

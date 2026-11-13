@@ -45,7 +45,7 @@ function Row({
   icon: React.ReactNode;
   children: React.ReactNode;
   onClick?: () => void;
-  to?: "/profile/edit" | "/privacy" | "/terms";
+  to?: "/profile/edit" | "/privacy" | "/terms" | "/impressum";
   danger?: boolean;
   disabled?: boolean;
 }) {
@@ -127,6 +127,9 @@ export function SettingsSheet({
                 </Row>
                 <Row icon={<FileText className="h-4 w-4" />} to="/terms">
                   Terms of Use
+                </Row>
+                <Row icon={<FileText className="h-4 w-4" />} to="/impressum">
+                  Impressum
                 </Row>
                 <Row icon={<LogOut className="h-4 w-4" />} onClick={() => signOut()}>
                   Sign out
